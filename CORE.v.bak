@@ -31,14 +31,14 @@ module CORE
 		output stack_write_data,
 		
 		//FLAG
-		output FLAG_read_data, FLAG_write_data, set_flag_alu,
+		output read_data, write_data, set_flag_alu,
 		input fl_zf, fl_cf,
 
 		//L3_CTRL
-		output L3_read_data, L3_write_data, L3_set_addr, L3_set_core,
+		output read_data, write_data, set_addr, set_core,
 		
 		//INTERRUPT
-		output INT_read_data, INT_write_data,
+		output read_data, write_data,
 		input [3:0] NUM_INT,
 		input INT2COR
 	);
@@ -62,7 +62,7 @@ always@(posedge CLK or negedge RESET)
 	end
 	
 //const
-assign CONST_out	= (`COMMIMP == `COM_LDI 	||`COMMIMP == `COM_L2MEM)?`COMMDAT:'hZ;
+assign CONST_out	= (`COMMIMP == `COM_LDI 	||`COMMIMP == `COM_PORT 	||`COMMIMP == `COM_L2MEM)?`COMMDAT:'hZ;
 
 //registrs
 assign AX_data_read = (`COMMIMP == `COM_MOV && `OPER1 == `ADR_AX)?1'b1:1'b0;
@@ -85,23 +85,23 @@ assign L2_data_write = (`COMMIMP == `COM_MOV && `OPER2 == `ADR_L2MEM)?1'b1:1'b0;
 assign L2_set_addr = (`COMMIMP == `COM_L2MEM)?1'b1:1'b0;
 
 //STACK
-assign stack_read_data = 'h0;
-assign stack_write_data= 'h0;
+assign stack_read_data;
+assign stack_write_data;
 		
 //FLAG
-assign FLAG_read_data= 'h0; 
-assign FLAG_write_data= 'h0; 
-assign set_flag_alu= 'h0;
+assign read_data; 
+assign write_data; 
+assign set_flag_alu;
 
 //L3_CTRL
-assign L3_read_data= 'h0; 
-assign L3_write_data= 'h0; 
-assign L3_set_addr= 'h0;
-assign L3_set_core= 'h0;
+assign read_data; 
+assign write_data; 
+assign set_addr;
+assign set_core;
 		
 //INTERRUPT
-assign INT_read_data= 'h0; 
-assign INT_write_data= 'h0;
+assign read_data; 
+assign write_data;
 
 endmodule
 	
