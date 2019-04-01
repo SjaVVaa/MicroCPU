@@ -29,6 +29,7 @@ module CORE
 		//STACK
 		output stack_read_data, 
 		output stack_write_data,
+		inout  [`NUMBER_WIDTH_DATA_WIRE - 1: 0] stack_IP, 
 		
 		//FLAG
 		output FLAG_read_data, FLAG_write_data, set_flag_alu,
@@ -45,7 +46,7 @@ module CORE
 		//STORE
 		output reg [`LEN_SEGMENT-1:0] SA, SB, SC,
 		output	store_write, store_read,
-		input		store_busy
+		input	store_busy
 	);
 	
 //IP MASHINE
@@ -60,8 +61,10 @@ always@(posedge CLK or negedge RESET)
 					`COM_BRNE:IP <= (!fl_zf)?`COMMDAT:IP + 1'b1;
 					`COM_BRCS:IP <= (fl_cf)?`COMMDAT:IP + 1'b1;
 					`COM_BRCC:IP <= (!fl_cf)?`COMMDAT:IP + 1'b1;
+					`COM_CALL:IP <= `COMMDAT;
+					`COM_RET:IP <= stack_IP;
 					`COM_JMP:IP <= `COMMDAT;
-					default:IP <= IP + 1'b1;
+					default:IP <= (!store_busy)?IP + 1'b1:IP;
 				endcase
 			end
 	end
@@ -87,29 +90,30 @@ assign ALU_data_write = (`COMMIMP == `COM_MOV && `OPER2 == `ADR_ACC)?1'b1:1'b0;
 //L2MEM
 assign L2_data_read = (`COMMIMP == `COM_MOV && `OPER1 == `ADR_L2MEM)?1'b1:1'b0;
 assign L2_data_write = (`COMMIMP == `COM_MOV && `OPER2 == `ADR_L2MEM)?1'b1:1'b0;
-assign L2_set_addr = (`COMMIMP == `COM_L2MEM)?1'b1:1'b0;
+assign L2_set_addr = ((`COMMIMP == `COM_L2MEM || `COMMIMP == `COM_SET) && `OPER1 == `ADR_L2MEM )?1'b1:1'b0;
 
 //STACK
-assign stack_read_data = 'h0;
-assign stack_write_data= 'h0;
+assign stack_read_data = (`COMMIMP == `COM_PUSH || `COMMIMP == `COM_CALL)? 1'b1:1'b0;
+assign stack_write_data= (`COMMIMP == `COM_POP || `COMMIMP == `COM_RET)? 1'b1:1'b0;
+assign stack_IP = (`COMMIMP == `COM_CALL)?IP:'hZ;
 		
 //FLAG
-assign FLAG_read_data= 'h0; 
-assign FLAG_write_data= 'h0; 
-assign set_flag_alu= 'h0;
+assign FLAG_read_data = (`COMMIMP == `COM_CALL)?1'b1: 1'b0;
+assign FLAG_write_data = (`COMMIMP == `COM_RET)?1'b1: 1'b0;
+assign set_flag_alu = (`COMMIMP>= `COM_ADD && `COMMIMP<=`COM_CP)?1'b1:1'b0;
 
 //L3_CTRL
-assign L3_read_data= 'h0; 
-assign L3_write_data= 'h0; 
-assign L3_set_addr= 'h0;
-assign L3_set_core= 'h0;
+assign L3_read_data= (`COMMIMP == `COM_MOV && `OPER1 == `ADR_L3MEM)?1'b1:1'b0;
+assign L3_write_data= (`COMMIMP == `COM_MOV && `OPER2 == `ADR_L2MEM)?1'b1:1'b0; 
+assign L3_set_addr= ((`COMMIMP == `COM_L3MEM || `COMMIMP == `COM_SET) && `OPER1 == `ADR_L3MEM )?1'b1:1'b0;
+assign L3_set_core= ((`COMMIMP == `COM_CORE || `COMMIMP == `COM_SET) && `OPER1 == `ADR_L3MEM )?1'b1:1'b0;
 		
 //INTERRUPT
 assign INT_read_data= 'h0; 
 assign INT_write_data= 'h0;
 
 //STORE
-assign store_write = 'h0; 
-assign store_read = 'h0;
+assign store_write = (`COMMIMP == `COM_SAVE)?1'b1:1'b0; 
+assign store_read = (`COMMIMP == `COM_LOAD)?1'b1:1'b0;
 endmodule
 	

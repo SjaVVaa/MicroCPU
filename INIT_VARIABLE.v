@@ -62,12 +62,11 @@
 `define	COM_GET_SC	8'd35		//	B<---SC		x		+			x		x		get segment ,C,IP]
 `define	COM_SAVE		8'd36		//	x				x		+			x		x		save data from L4 to MEM
 `define	COM_LOAD		8'd37		//	x				x		+			x		x		load data from MEM to L4
-//------------------------------------------------------------------- SDRAM 
-`define	COM_SDSAVE	8'd38		//	x				x		+			x		x		save data from L4 to SDRAM
-`define	COM_SDLOAD	8'd39		//	x				x		+			x		x		load data from SDRAM to L4
-	
 
-
+//------------------------------------------------------------------- MEMORY STRUCT
+//0x00_00_00_00	0x0F_FF_FF_FF	BUTLOADER
+//0x10_00_00_00	0x1F_FF_FF_FF	SDRAM 32MB
+//0x20_00_00_00	0xFF_FF_FF_FF	ALL MEMORY  
 
 //ADDRES SYSTEM
 `define	ADR_AX		4'd0
