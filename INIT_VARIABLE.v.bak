@@ -40,14 +40,14 @@
 `define	COM_SET		8'd27		//
 `define	COM_GET		8'd28		//
 `define	COM_CORE		8'd29		//
-`define	COM_SET_SA	8'd29
-`define	COM_SET_SB	8'd29
-`define	COM_SET_SC	8'd29
-`define	COM_GET_SA	8'd29
-`define	COM_GET_SB	8'd29
-`define	COM_GET_SC	8'd29
-`define	COM_STORE	8'd29
-
+`define	COM_SET_SA	
+`define	COM_SET_SB
+`define	COM_SET_SC
+`define	COM_GET_SA	
+`define	COM_GET_SB
+`define	COM_GET_SC
+`define	COM_STORE
+`
 
 
 //ADDRES SYSTEM
