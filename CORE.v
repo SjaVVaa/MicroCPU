@@ -40,7 +40,12 @@ module CORE
 		//INTERRUPT
 		output INT_read_data, INT_write_data,
 		input [3:0] NUM_INT,
-		input INT2COR
+		input INT2COR,
+		
+		//STORE
+		output reg [`LEN_SEGMENT-1:0] SA, SB, SC,
+		output	store_write, store_read,
+		input		store_busy
 	);
 	
 //IP MASHINE
@@ -103,5 +108,8 @@ assign L3_set_core= 'h0;
 assign INT_read_data= 'h0; 
 assign INT_write_data= 'h0;
 
+//STORE
+assign store_write = 'h0; 
+assign store_read = 'h0;
 endmodule
 	

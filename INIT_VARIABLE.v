@@ -5,11 +5,14 @@
 
 `define 	OPER1 	COMMAND_INPUT[7:4]
 `define	OPER2		COMMAND_INPUT[3:0]
-`define	COMMIMP	COMMAND_INPUT[15:8]
+`define	COMMIMP	COMMAND_INPUT[13:8]
 `define	COMMDAT	COMMAND_INPUT[7:0]
 
 //			--- CORE ---
 // COMMANDs SYSTEM					OP1	OP2	ALU	IP			flag	stack	
+//-------------------------------------------------------------------
+//[HYPTR][INT][C5][C4][C3][C2][C1][C0][D7][D6][D5][D4][D3][D2][D1][D0]
+//-------------------------------------------------------------------
 `define	COM_NOP		8'd0		//	x		x		x		+			x		x
 //------------------------------------------------------------------- ALU
 `define	COM_ADD		8'd1		//	x		x		0		+			x		x		+
@@ -73,7 +76,7 @@
 `define	ADR_DX		4'd3
 `define	ADR_ACC		4'd4
 `define	ADR_L2MEM	4'd5
-`define 	ADR_FLAG		4'd6
+`define	ADR_FLAG		4'd6
 `define	ADR_STACK	4'd7
 `define	ADR_L3MEM	4'd8
 `define	ADR_INT		4'd9
@@ -109,3 +112,6 @@
 `define COLUMN_ADDR 9
 `define BURST_LEN 3
 `define CAS_LEN 3
+
+//STORE
+`define	LEN_SEGMENT 8
