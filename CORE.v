@@ -9,7 +9,7 @@ module CORE
 		//output write_data_bus, read_data_bus, reset_data_bus, <--- UPGRADE!
 		input [`COMMAND_LEN_WIRE-1: 0] COMMAND_INPUT,
 		output reg [`NUMBER_WIDTH_DATA_WIRE - 1: 0] IP,
-		output	[`NUMBER_WIDTH_DATA_WIRE - 1: 0] CONST_out,
+		inout	[`NUMBER_WIDTH_DATA_WIRE - 1: 0] CONST_out,
 		
 		//registers
 		output AX_data_read, BX_data_read, CX_data_read, DX_data_read,
@@ -46,8 +46,10 @@ module CORE
 		//STORE
 		output reg [`LEN_SEGMENT-1:0] SA, SB, SC,
 		output	store_write, store_read,
-		input	store_busy
+		input	store_busy,
+		output reg [`LEN_SEGMENT-1:0] SEGMENT
 	);
+
 	
 //IP MASHINE
 always@(posedge CLK or negedge RESET)
@@ -68,9 +70,79 @@ always@(posedge CLK or negedge RESET)
 				endcase
 			end
 	end
+
+// SA MASHINE
+always@(posedge CLK or negedge RESET)
+	begin
+		if(!RESET)
+			SA <= 'h0;
+		else
+			begin
+				if(`COMMIMP == `COM_SA)
+					SA <= `COMMDAT;
+				else if(`COMMIMP == `COM_SET_SA)
+					SA <= CONST_out;
+				else
+					SA <= SA;
+			end
+	end
+	
+// SB MASHINE
+always@(posedge CLK or negedge RESET)
+	begin
+		if(!RESET)
+			SB <= 'h0;
+		else
+			begin
+				if(`COMMIMP == `COM_SB)
+					SB <= `COMMDAT;
+				else if(`COMMIMP == `COM_SET_SB)
+					SB <= CONST_out;
+				else
+					SB <= SB;
+			end
+	end
+	
+// SC MASHINE
+always@(posedge CLK or negedge RESET)
+	begin
+		if(!RESET)
+			SC <= 'h0;
+		else
+			begin
+				if(`COMMIMP == `COM_SC)
+					SC <= `COMMDAT;
+				else if(`COMMIMP == `COM_SET_SC)
+					SC <= CONST_out;
+				else
+					SC <= SC;
+			end
+	end
+
+// AS/CS OUTPUT
+always@(posedge CLK or negedge RESET)
+	begin
+		if(!RESET)
+			SEGMENT = 'hZ;
+		else
+			begin
+				case(`COMMIMP)
+				`COM_GET_SA:SEGMENT = SA;
+				`COM_GET_SB:SEGMENT = SB;
+				`COM_GET_SC:SEGMENT = SC;
+				default:SEGMENT = 'hZ;
+				endcase
+			end
+	end
 	
 //const
-assign CONST_out	= (`COMMIMP == `COM_LDI 	||`COMMIMP == `COM_L2MEM)?`COMMDAT:'hZ;
+assign CONST_out	= (`COMMIMP == `COM_LDI ||
+`COMMIMP == `COM_SA || 
+`COMMIMP == `COM_SB || 
+`COMMIMP == `COM_SC	|| 
+`COMMIMP == `COM_L3MEM || 
+`COMMIMP == `COM_CORE || 
+`COMMIMP == `COM_L2MEM)?`COMMDAT:'hZ;
 
 //registrs
 assign AX_data_read = (`COMMIMP == `COM_MOV && `OPER1 == `ADR_AX)?1'b1:1'b0;
@@ -93,8 +165,8 @@ assign L2_data_write = (`COMMIMP == `COM_MOV && `OPER2 == `ADR_L2MEM)?1'b1:1'b0;
 assign L2_set_addr = ((`COMMIMP == `COM_L2MEM || `COMMIMP == `COM_SET) && `OPER1 == `ADR_L2MEM )?1'b1:1'b0;
 
 //STACK
-assign stack_read_data = (`COMMIMP == `COM_PUSH || `COMMIMP == `COM_CALL)? 1'b1:1'b0;
-assign stack_write_data= (`COMMIMP == `COM_POP || `COMMIMP == `COM_RET)? 1'b1:1'b0;
+assign stack_read_data = (`COMMIMP == `COM_PUSH || `COMMIMP == `COM_CALL || `COMMIMP ==`COM_GET_SA || `COMMIMP ==`COM_GET_SB || `COMMIMP ==`COM_GET_SC)? 1'b1:1'b0;
+assign stack_write_data= (`COMMIMP == `COM_POP || `COMMIMP == `COM_RET || `COMMIMP ==`COM_SET_SA || `COMMIMP ==`COM_SET_SB || `COMMIMP ==`COM_SET_SC)? 1'b1:1'b0;
 assign stack_IP = (`COMMIMP == `COM_CALL)?IP:'hZ;
 		
 //FLAG
@@ -105,8 +177,8 @@ assign set_flag_alu = (`COMMIMP>= `COM_ADD && `COMMIMP<=`COM_CP)?1'b1:1'b0;
 //L3_CTRL
 assign L3_read_data= (`COMMIMP == `COM_MOV && `OPER1 == `ADR_L3MEM)?1'b1:1'b0;
 assign L3_write_data= (`COMMIMP == `COM_MOV && `OPER2 == `ADR_L2MEM)?1'b1:1'b0; 
-assign L3_set_addr= ((`COMMIMP == `COM_L3MEM || `COMMIMP == `COM_SET) && `OPER1 == `ADR_L3MEM )?1'b1:1'b0;
-assign L3_set_core= ((`COMMIMP == `COM_CORE || `COMMIMP == `COM_SET) && `OPER1 == `ADR_L3MEM )?1'b1:1'b0;
+assign L3_set_addr= (`COMMIMP == `COM_L3MEM || (`COMMIMP == `COM_SET && `OPER1 == `ADR_L3MEM ))?1'b1:1'b0;
+assign L3_set_core= (`COMMIMP == `COM_CORE || (`COMMIMP == `COM_SET && `OPER1 == `ADR_L3MEM ))?1'b1:1'b0;
 		
 //INTERRUPT
 assign INT_read_data= 'h0; 
@@ -115,5 +187,7 @@ assign INT_write_data= 'h0;
 //STORE
 assign store_write = (`COMMIMP == `COM_SAVE)?1'b1:1'b0; 
 assign store_read = (`COMMIMP == `COM_LOAD)?1'b1:1'b0;
+
+//
 endmodule
 	

@@ -49,7 +49,7 @@
 `define 	COM_POP		8'd24		//	A<--stk		x		+			x		-
 `define	COM_CALL		8'd25		//	stk<{fl,ip}	x		+			x		+
 `define	COM_RET		8'd26		//	{fl,ip}<stk	x		+			x		-	
-//------------------------------------------------------------------- INT
+//------------------------------------------------------------------- INT <<==================not working now
 `define	COM_INT		8'd27		//	{const}		x		+			x		x		init programm int	
 `define	COM_INTON	8'd28		//	{const}		x		+			x		x		int
 `define	COM_INTOFF	8'd29		//	{const}		x		+			x		x		int
@@ -60,8 +60,11 @@
 `define	COM_GET_SA	8'd33		//	B<---SA		x		+			x		x		get segment [A,
 `define	COM_GET_SB	8'd34		//	B<---SB		x		+			x		x		get segment ,B,
 `define	COM_GET_SC	8'd35		//	B<---SC		x		+			x		x		get segment ,C,IP]
-`define	COM_SAVE		8'd36		//	x				x		+			x		x		save data from L4 to MEM
-`define	COM_LOAD		8'd37		//	x				x		+			x		x		load data from MEM to L4
+`define	COM_SA		8'd36		//	{const}		x		+			x		x		set segment [A,
+`define	COM_SB		8'd37		//	{const}		x		+			x		x		set segment ,B,
+`define	COM_SC		8'd38		//	{const}		x		+			x		x		set segment ,C,IP]
+`define	COM_SAVE		8'd39		//	x				x		+			x		x		save data from L4 to MEM
+`define	COM_LOAD		8'd40		//	x				x		+			x		x		load data from MEM to L4
 
 //------------------------------------------------------------------- MEMORY STRUCT
 //0x00_00_00_00	0x0F_FF_FF_FF	BUTLOADER

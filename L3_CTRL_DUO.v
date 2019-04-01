@@ -34,11 +34,11 @@ always@(posedge CLK or negedge RESET)
 					if(set_addr)
 						ADDR <= DATA;
 					else
-						CORE <= CORE;
+						ADDR <= ADDR;
 				end
 		end
 		
 assign READ = read_data;
 assign WRITE = write_data;
-assign DATA = (CORE[0])?L3D0:L3D1;
+assign DATA = (write_data)?(CORE[0])?L3D0:L3D1:'hZ;
 endmodule

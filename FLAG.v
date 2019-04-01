@@ -20,7 +20,7 @@ always@(posedge CLK or negedge RESET)
 				if(read_data)
 					buff_flag <= flag;
 				else if(set_flag_alu)
-					buff_flag <= {fl_zf_in, fl_cf_in};
+					buff_flag <= {buff_flag [`FLAG_LEN-1 : 2],fl_zf_in, fl_cf_in};
 				else
 					buff_flag <= buff_flag;
 			end

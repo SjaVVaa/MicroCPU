@@ -14,22 +14,40 @@
 
 // PROGRAM		"Quartus Prime"
 // VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
-// CREATED		"Thu Mar 28 16:11:41 2019"
+// CREATED		"Mon Apr 01 16:47:47 2019"
 
 module MicroCPU(
 	CLK,
 	RES,
 	BUF2CPU,
+	ST_WR,
+	ST_RD,
+	READ,
+	WRITE,
+	ADDR,
 	IP,
-	PORTA
+	LD0,
+	LD1,
+	SA,
+	SB,
+	SC
 );
 
 
 input wire	CLK;
 input wire	RES;
 input wire	[15:0] BUF2CPU;
+output wire	ST_WR;
+output wire	ST_RD;
+output wire	READ;
+output wire	WRITE;
+output wire	[7:0] ADDR;
 output wire	[7:0] IP;
-inout wire	[7:0] PORTA;
+inout wire	[7:0] LD0;
+inout wire	[7:0] LD1;
+output wire	[7:0] SA;
+output wire	[7:0] SB;
+output wire	[7:0] SC;
 
 wire	[7:0] A2ALU;
 wire	adr;
@@ -44,16 +62,26 @@ wire	cdr;
 wire	cdw;
 wire	cf_in;
 wire	cf_out;
-wire	dadw;
 wire	[7:0] DATA_WIRE;
 wire	ddr;
 wire	ddw;
 wire	[7:0] FLAG;
+wire	flagdr;
+wire	flagds;
+wire	flagdw;
+wire	int2cor;
+wire	inted;
+wire	intwd;
 wire	l2dr;
 wire	l2ds;
 wire	l2dw;
-wire	padr;
-wire	pads;
+wire	l3rd;
+wire	l3sa;
+wire	l3sc;
+wire	l3wd;
+wire	[3:0] num;
+wire	stackdr;
+wire	stackdw;
 wire	zf_in;
 wire	zf_out;
 
@@ -79,7 +107,12 @@ CORE	b2v_ix_core(
 	.RESET(RES),
 	.fl_zf(zf_out),
 	.fl_cf(cf_out),
+	.INT2COR(int2cor),
+	
 	.COMMAND_INPUT(BUF2CPU),
+	.CONST_out(DATA_WIRE),
+	.NUM_INT(num),
+	.stack_IP(DATA_WIRE),
 	.AX_data_read(adr),
 	.BX_data_read(bdr),
 	.CX_data_read(cdr),
@@ -93,26 +126,68 @@ CORE	b2v_ix_core(
 	.L2_data_read(l2dr),
 	.L2_data_write(l2dw),
 	.L2_set_addr(l2ds),
-	.PORTA_data_read(padr),
-	.PORTA_data_write(dadw),
-	.PORTA_set_mask(pads),
+	.stack_read_data(stackdr),
+	.stack_write_data(stackdw),
+	.FLAG_read_data(flagdr),
+	.FLAG_write_data(flagdw),
+	.set_flag_alu(flagds),
+	.L3_read_data(l3rd),
+	.L3_write_data(l3wd),
+	.L3_set_addr(l3sa),
+	.L3_set_core(l3sc),
+	.INT_read_data(inted),
+	.INT_write_data(intwd),
+	.store_write(ST_WR),
+	.store_read(ST_RD),
 	.ALU_COMM(ALU_COM),
-	.CONST_out(DATA_WIRE),
-	.IP(IP));
+	
+	.IP(IP),
+	.SA(SA),
+	.SB(SB),
+	.SC(SC),
+	.SEGMENT(DATA_WIRE)
+	);
 
 
 FLAG	b2v_ix_flag(
 	.CLK(CLK),
 	.RESET(RES),
-	
-	
-	
+	.read_data(flagdr),
+	.write_data(flagdw),
+	.set_flag_alu(flagds),
 	.fl_zf_in(zf_in),
 	.fl_cf_in(cf_in),
 	.flag(FLAG),
 	.fl_zf_out(zf_out),
 	.fl_cf_out(cf_out)
 	);
+
+
+INTERRUPT	b2v_ix_int(
+	.CLK(CLK),
+	.RESET(RES),
+	.read_data(inted),
+	.write_data(intwd),
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	.DATA(DATA_WIRE),
+	.INT2COR(int2cor),
+	
+	.NUM_INT(num));
 
 
 L2_MEMORY	b2v_ix_l2(
@@ -125,14 +200,20 @@ L2_MEMORY	b2v_ix_l2(
 	.DATA_out(DATA_WIRE));
 
 
-GPIO_PORT	b2v_ix_porta(
+L3_CTRL_DUO	b2v_ix_l3(
 	.CLK(CLK),
 	.RESET(RES),
-	.data_read(padr),
-	.data_write(dadw),
-	.set_mask(pads),
-	.DATA_io(DATA_WIRE),
-	.PORT(PORTA)
+	.read_data(l3rd),
+	.write_data(l3wd),
+	.set_addr(l3sa),
+	.set_core(l3sc),
+	.DATA(DATA_WIRE),
+	.L3D0(LD0),
+	.L3D1(LD1),
+	.READ(READ),
+	.WRITE(WRITE),
+	.ADDR(ADDR)
+	
 	
 	);
 
@@ -175,34 +256,11 @@ OPERATION_REG	b2v_ix_reg_D(
 	);
 
 
-SDRAM_CTRL	b2v_ix_SDRAM(
-	.CLK(CLK),
-	.RESET(RES),
-	
-	
-	
-	
-	.DATA(ALU_COM)
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	);
-
-
 STACK	b2v_ix_stack(
 	.CLK(CLK),
 	.RESET(RES),
-	
-	
+	.read_data(stackdr),
+	.write_data(stackdw),
 	.DATA(DATA_WIRE),
 	.flag(FLAG)
 	
