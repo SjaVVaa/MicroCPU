@@ -52,7 +52,7 @@ output wire	READ;
 output wire	WRITE;
 output wire	[7:0] ADDR;
 output wire	[7:0] IP;
-output wire	[7:0] L2DAT;
+inout wire	[7:0] L2DAT;
 inout wire	[7:0] LD0;
 inout wire	[7:0] LD1;
 output wire	[7:0] SA;

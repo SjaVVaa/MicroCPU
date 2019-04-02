@@ -6,11 +6,13 @@ module CODELOADER
 		input CLK_C, CLK_B, RESET, WRITE, READ,
 		output [`COMMAND_LEN_WIRE-1: 0] COMMAND,
 		input [`LEN_SEGMENT-1:0] SA, SB, SC, IP,
-		output store_busy,
+		output store_busy, L1WR, L1RD,
+		output [1:0] L1ADR,
+		inout [`NUMBER_WIDTH_DATA_WIRE - 1: 0] L1DAT,
 		
 		// TO FABRICK DATA
 		inout [`LEN_SEGMENT-1:0] SA_D3, SB_D2, SC_D1, IP_D0,
-		output WRITE, READ, ADDR,
+		output WRITEFD, READFD, ADDRFD,
 		inout BUSY_line_MASTER,
 		input BUSY_line_SLAVE,
 		
