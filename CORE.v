@@ -47,10 +47,53 @@ module CORE
 		output reg [`LEN_SEGMENT-1:0] SA, SB, SC,
 		output	store_write, store_read,
 		input	store_busy,
-		output reg [`LEN_SEGMENT-1:0] SEGMENT
+		output reg [`LEN_SEGMENT-1:0] SEGMENT, // to stack
+		
+		//L1
+		input L1_write, L1_read,
+		input [1:0] L1_ADDR,
+		inout [`NUMBER_WIDTH_DATA_WIRE - 1: 0] L12loader, L1_wire
 	);
-
 	
+// CASE L1
+reg [`NUMBER_WIDTH_DATA_WIRE - 1: 0] L1_MEM [0:3];
+reg [`NUMBER_WIDTH_DATA_WIRE - 1: 0] ADDR_CORE;
+always@(posedge CLK or negedge RESET)
+	begin
+		if(!RESET)
+			ADDR_CORE <= 'h0;
+		else
+			begin
+				if((`COMMIMP == `COM_L1MEM) || ((`COMMIMP == `COM_SET)  && (`OPER1 == `ADR_L1MEM )))
+					ADDR_CORE <= L1_wire;
+				else
+					ADDR_CORE <= ADDR_CORE;
+			end
+	end
+	
+always@(posedge CLK or negedge RESET)
+	begin
+		if(!RESET)
+			begin
+				L1_MEM[0] <= 'h0;
+				L1_MEM[1] <= 'h0;
+				L1_MEM[2] <= 'h0;
+				L1_MEM[3] <= 'h0;
+			end
+		else
+			begin
+				if(L1_read)
+					L1_MEM[L1_ADDR] <= L12loader;
+				if(`COMMIMP == `COM_MOV && `OPER1 == `ADR_L1MEM)
+					L1_MEM[ADDR_CORE] <= L1_wire;
+				else
+					L1_MEM[L1_ADDR] <= L1_MEM[L1_ADDR];
+			end
+	end
+assign 	L12loader = (L1_write)?L1_MEM[L1_ADDR]:'hZ;
+assign	L1_wire = (`COMMIMP == `COM_MOV && `OPER2 == `ADR_L1MEM)?L1_MEM[ADDR_CORE]:'hZ;
+
+
 //IP MASHINE
 always@(posedge CLK or negedge RESET)
 	begin
@@ -136,13 +179,16 @@ always@(posedge CLK or negedge RESET)
 	end
 	
 //const
-assign CONST_out	= (`COMMIMP == `COM_LDI ||
-`COMMIMP == `COM_SA || 
-`COMMIMP == `COM_SB || 
-`COMMIMP == `COM_SC	|| 
-`COMMIMP == `COM_L3MEM || 
-`COMMIMP == `COM_CORE || 
-`COMMIMP == `COM_L2MEM)?`COMMDAT:'hZ;
+assign CONST_out	= (
+`COMMIMP == `COM_LDI 	||
+`COMMIMP == `COM_SA 	|| 
+`COMMIMP == `COM_SB 	|| 
+`COMMIMP == `COM_SC		|| 
+`COMMIMP == `COM_L3MEM 	|| 
+`COMMIMP == `COM_CORE 	|| 
+`COMMIMP == `COM_L2MEM 	||
+`COMMIMP == `COM_L1MEM 
+)?`COMMDAT:'hZ;
 
 //registrs
 assign AX_data_read = (`COMMIMP == `COM_MOV && `OPER1 == `ADR_AX)?1'b1:1'b0;
@@ -162,7 +208,7 @@ assign ALU_data_write = (`COMMIMP == `COM_MOV && `OPER2 == `ADR_ACC)?1'b1:1'b0;
 //L2MEM
 assign L2_data_read = (`COMMIMP == `COM_MOV && `OPER1 == `ADR_L2MEM)?1'b1:1'b0;
 assign L2_data_write = (`COMMIMP == `COM_MOV && `OPER2 == `ADR_L2MEM)?1'b1:1'b0;
-assign L2_set_addr = ((`COMMIMP == `COM_L2MEM || `COMMIMP == `COM_SET) && `OPER1 == `ADR_L2MEM )?1'b1:1'b0;
+assign L2_set_addr = (`COMMIMP == `COM_L2MEM || (`COMMIMP == `COM_SET && `OPER1 == `ADR_L2MEM ))?1'b1:1'b0;
 
 //STACK
 assign stack_read_data = (`COMMIMP == `COM_PUSH || `COMMIMP == `COM_CALL || `COMMIMP ==`COM_GET_SA || `COMMIMP ==`COM_GET_SB || `COMMIMP ==`COM_GET_SC)? 1'b1:1'b0;
@@ -188,6 +234,7 @@ assign INT_write_data= 'h0;
 assign store_write = (`COMMIMP == `COM_SAVE)?1'b1:1'b0; 
 assign store_read = (`COMMIMP == `COM_LOAD)?1'b1:1'b0;
 
-//
+//L1
+
 endmodule
 	

@@ -14,18 +14,23 @@
 
 // PROGRAM		"Quartus Prime"
 // VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
-// CREATED		"Mon Apr 01 16:47:47 2019"
+// CREATED		"Tue Apr 02 17:34:42 2019"
 
 module MicroCPU(
 	CLK,
 	RES,
+	store_busy,
+	L1WR,
+	L1RD,
 	BUF2CPU,
+	L1ADDR,
 	ST_WR,
 	ST_RD,
 	READ,
 	WRITE,
 	ADDR,
 	IP,
+	L2DAT,
 	LD0,
 	LD1,
 	SA,
@@ -36,13 +41,18 @@ module MicroCPU(
 
 input wire	CLK;
 input wire	RES;
+input wire	store_busy;
+input wire	L1WR;
+input wire	L1RD;
 input wire	[15:0] BUF2CPU;
+input wire	[1:0] L1ADDR;
 output wire	ST_WR;
 output wire	ST_RD;
 output wire	READ;
 output wire	WRITE;
 output wire	[7:0] ADDR;
 output wire	[7:0] IP;
+output wire	[7:0] L2DAT;
 inout wire	[7:0] LD0;
 inout wire	[7:0] LD1;
 output wire	[7:0] SA;
@@ -108,9 +118,14 @@ CORE	b2v_ix_core(
 	.fl_zf(zf_out),
 	.fl_cf(cf_out),
 	.INT2COR(int2cor),
-	
+	.store_busy(store_busy),
+	.L1_write(L1WR),
+	.L1_read(L1RD),
 	.COMMAND_INPUT(BUF2CPU),
 	.CONST_out(DATA_WIRE),
+	.L12loader(L2DAT),
+	.L1_ADDR(L1ADDR),
+	.L1_wire(DATA_WIRE),
 	.NUM_INT(num),
 	.stack_IP(DATA_WIRE),
 	.AX_data_read(adr),
@@ -142,6 +157,8 @@ CORE	b2v_ix_core(
 	.ALU_COMM(ALU_COM),
 	
 	.IP(IP),
+	
+	
 	.SA(SA),
 	.SB(SB),
 	.SC(SC),
