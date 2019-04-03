@@ -501,7 +501,7 @@ refer to the applicable agreement for further details.
 	(drawing
 		(rectangle (rect 16 16 264 288))
 	)
-	(annotation_block (parameter)(rect 296 -24 472 16))
+	(annotation_block (parameter)(rect 992 480 1168 520))
 )
 (connector
 	(text "CLK_C" (rect 706 360 739 377)(font "Intel Clear" ))

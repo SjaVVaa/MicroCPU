@@ -3,7 +3,7 @@
 module CODELOADER
 	(	
 		// TO CORE
-		input CLK_C, CLK_B, RESET, WRITE, READ,CALL,
+		input CLK_C, CLK_B, RESET, WRITE, READ, CALL,
 		output [`COMMAND_LEN_WIRE-1: 0] COMMAND,
 		input [`LEN_SEGMENT-1:0] SA, SB, SC, IP,
 		output reg store_busy, L1WR, L1RD,
@@ -35,6 +35,8 @@ reg [3:0] STATE;
 reg L1_WR, L1_RD, COMM_LOAD;
 reg end_L1_reload;
 reg end_L1_block;
+reg [10:0] LOADCOUNTER;
+reg end_load;
 
 `define LOADER_SLEEP	4'd0	//sleep module
 `define LOADER_CHECK	4'd1	//module has make request for L1 cache
@@ -97,9 +99,9 @@ always@(posedge	CLK_B or negedge RESET)
 `LOADER_SLEEP	:begin
 					L1_WR <= (WRITE)?1'b1:1'b0;
 					L1_RD <= (READ)?1'b1:1'b0;
-					COMM_LOAD <= (front_CLK_C && COUNT_COM && (&IP))?1'b1:1'b0;
+					COMM_LOAD <= (front_CLK_C && COUNT_COM && (&IP) || CALL)?1'b1:1'b0;
 					store_busy <= 1'b0;
-					STATE <= ((front_CLK_C && COUNT_COM && (&IP)) || WRITE || READ)?`LOADER_CHECK:STATE;
+					STATE <= ((front_CLK_C && COUNT_COM && (&IP)) || CALL || WRITE || READ)?`LOADER_CHECK:STATE;
 				end
 `LOADER_CHECK	:begin
 					STATE <= (end_L1_reload)?`LOADER_TURN:STATE;
@@ -138,14 +140,23 @@ assign SB_D2 = (STATE == `LOADER_ADDR)?SB:(STATE == `LOADER_WRITEL)?L1BUFF[1]:'h
 assign SC_D1 = (STATE == `LOADER_ADDR)?SC:(STATE == `LOADER_WRITEL)?L1BUFF[2]:'hZ;
 assign IP_D0 = (STATE == `LOADER_ADDR)?IP:(STATE == `LOADER_WRITEL)?L1BUFF[3]:'hZ;
 assign ADDRFD = (STATE == `LOADER_ADDR)?1'b1:1'hz;
-assign WRITEFD = (STATE == `LOADER_WRITEL || 1'b0)?1'b1:1'hz;
-assign READFD = (STATE == `LOADER_READL)?1'b1:1'hz;
+assign WRITEFD = (STATE == `LOADER_WRITEL)?1'b1:1'hz;
+assign READFD = (STATE == `LOADER_READL || STATE == `LOADER_LOAD)?1'b1:1'hz;
 assign BUSY_line_MASTER = ((STATE == `LOADER_ADDR) || (STATE == `LOADER_WRITEL) /*|| (STATE == `LOADER_READL)*/ || (STATE == `LOADER_LOAD))?1'h0:1'hz;
 
 //L1 cache MASHINE
 always@(negedge	CLK_B or negedge RESET)
 	begin
-
+		if (!RESET)
+			begin
+				L1ADR <='h0;
+				end_L1_reload <= 'h0;
+				end_L1_block <= 'h0;
+				L1WR <='h0; 
+				L1RD <='h0;
+			end
+		else
+			begin
 				case(STATE)
 `LOADER_SLEEP	:begin
 					L1ADR <='h0;
@@ -198,9 +209,54 @@ always@(negedge	CLK_B or negedge RESET)
 `LOADER_LOAD	:begin
 
 				end
-				default:STATE <= `LOADER_SLEEP;
 				endcase
-			
+			end
 	end	
 assign L1DAT = (L1RD)?L1BUFF[L1ADR]:'hz;
+
+//CODE LOADER
+always@(negedge	CLK_B or negedge RESET)
+	begin
+		if (!RESET)
+			begin
+				LOADCOUNTER <= 'h0;
+				end_load <= 1'b0;
+			end
+		else
+			begin
+				case(STATE)
+`LOADER_SLEEP	:begin
+					LOADCOUNTER <= 'h0;
+				end
+`LOADER_CHECK	:begin
+
+				end
+`LOADER_TURN	:begin
+
+				end
+`LOADER_ADDR	:begin
+					LOADCOUNTER <= {COUNT_COM,IP};
+				end
+`LOADER_WRITEL	:begin
+
+				end
+`LOADER_READL	:begin
+
+				end
+`LOADER_LOAD	:begin
+					if(front_line_SLAVE && (LOADCOUNTER < 10'b10_00000000))
+						begin
+							LOADCOUNTER <= LOADCOUNTER + 2'd2;
+							COM_DAT[LOADCOUNTER] <= {SA_D3,SB_D2};
+							COM_DAT[LOADCOUNTER + 1'd1] <= {SC_D1,IP_D0};
+						end
+					else
+						begin
+							end_load <= 1'b1;
+						end
+				end
+				endcase
+			end
+	end	
+assign COMMAND = COM_DAT[{COUNT_COM,IP}];
 endmodule
