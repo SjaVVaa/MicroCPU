@@ -3,11 +3,11 @@
 module CODELOADER
 	(	
 		// TO CORE
-		input CLK_C, CLK_B, RESET, WRITE, READ,
+		input CLK_C, CLK_B, RESET, WRITE, READ,CALL,
 		output [`COMMAND_LEN_WIRE-1: 0] COMMAND,
 		input [`LEN_SEGMENT-1:0] SA, SB, SC, IP,
-		output store_busy, L1WR, L1RD,
-		output [1:0] L1ADR,
+		output reg store_busy, L1WR, L1RD,
+		output reg [1:0] L1ADR,
 		inout [`NUMBER_WIDTH_DATA_WIRE - 1: 0] L1DAT,
 		
 		// TO FABRICK DATA
@@ -17,7 +17,7 @@ module CODELOADER
 		input BUSY_line_SLAVE,	//tri1
 		
 		// TO FABRICK CONTROLL
-		output output [3:0] NUMBER_UNIT,
+		output [3:0] NUMBER_UNIT,
 		output REQUEST,
 		input EN, REQUEST_OK	
 	);
@@ -35,6 +35,7 @@ reg [3:0] STATE;
 reg L1_WR, L1_RD, COMM_LOAD;
 reg end_L1_reload;
 reg end_L1_block;
+
 `define LOADER_SLEEP	4'd0	//sleep module
 `define LOADER_CHECK	4'd1	//module has make request for L1 cache
 `define	LOADER_TURN		4'd2	//module  standing on a turn
@@ -72,7 +73,7 @@ always@(posedge CLK_B or negedge RESET)
 			begin
 				if(front_CLK_C && !COUNT_COM && (&IP))
 					COUNT_COM <= 1'b1;
-				else if(front_CLK_C && !COUNT_COM && (&IP))
+				else if(front_CLK_C && COUNT_COM && (&IP))
 					COUNT_COM <= 1'b0;
 				else
 					COUNT_COM <= COUNT_COM;
@@ -101,7 +102,7 @@ always@(posedge	CLK_B or negedge RESET)
 					STATE <= ((front_CLK_C && COUNT_COM && (&IP)) || WRITE || READ)?`LOADER_CHECK:STATE;
 				end
 `LOADER_CHECK	:begin
-					STATE <= (end_L1_reload)`LOADER_TURN:STATE;
+					STATE <= (end_L1_reload)?`LOADER_TURN:STATE;
 					store_busy <= 1'b1;
 				end
 `LOADER_TURN	:begin
@@ -121,7 +122,7 @@ always@(posedge	CLK_B or negedge RESET)
 					STATE <= `LOADER_SLEEP;
 				end
 `LOADER_READL	:begin
-					STATE <= (end_L1_reload)`LOADER_SLEEP:STATE;
+					STATE <= (end_L1_reload)?`LOADER_SLEEP:STATE;
 				end
 `LOADER_LOAD	:begin
 					
@@ -137,7 +138,7 @@ assign SB_D2 = (STATE == `LOADER_ADDR)?SB:(STATE == `LOADER_WRITEL)?L1BUFF[1]:'h
 assign SC_D1 = (STATE == `LOADER_ADDR)?SC:(STATE == `LOADER_WRITEL)?L1BUFF[2]:'hZ;
 assign IP_D0 = (STATE == `LOADER_ADDR)?IP:(STATE == `LOADER_WRITEL)?L1BUFF[3]:'hZ;
 assign ADDRFD = (STATE == `LOADER_ADDR)?1'b1:1'hz;
-assign WRITEFD = (STATE == `LOADER_WRITEL || )?1'b1:1'hz;
+assign WRITEFD = (STATE == `LOADER_WRITEL || 1'b0)?1'b1:1'hz;
 assign READFD = (STATE == `LOADER_READL)?1'b1:1'hz;
 assign BUSY_line_MASTER = ((STATE == `LOADER_ADDR) || (STATE == `LOADER_WRITEL) /*|| (STATE == `LOADER_READL)*/ || (STATE == `LOADER_LOAD))?1'h0:1'hz;
 

@@ -14,7 +14,7 @@
 
 // PROGRAM		"Quartus Prime"
 // VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
-// CREATED		"Tue Apr 02 17:34:42 2019"
+// CREATED		"Wed Apr 03 23:10:46 2019"
 
 module MicroCPU(
 	CLK,
@@ -28,6 +28,7 @@ module MicroCPU(
 	ST_RD,
 	READ,
 	WRITE,
+	ST_CALL,
 	ADDR,
 	IP,
 	L2DAT,
@@ -50,6 +51,7 @@ output wire	ST_WR;
 output wire	ST_RD;
 output wire	READ;
 output wire	WRITE;
+output wire	ST_CALL;
 output wire	[7:0] ADDR;
 output wire	[7:0] IP;
 inout wire	[7:0] L2DAT;
@@ -154,6 +156,7 @@ CORE	b2v_ix_core(
 	.INT_write_data(intwd),
 	.store_write(ST_WR),
 	.store_read(ST_RD),
+	.store_call(ST_CALL),
 	.ALU_COMM(ALU_COM),
 	
 	.IP(IP),

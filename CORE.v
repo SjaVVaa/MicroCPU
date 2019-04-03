@@ -45,9 +45,10 @@ module CORE
 		
 		//STORE
 		output reg [`LEN_SEGMENT-1:0] SA, SB, SC,
-		output	store_write, store_read,
+		output	store_write, store_read, store_call,
 		input	store_busy,
 		output reg [`LEN_SEGMENT-1:0] SEGMENT, // to stack
+		
 		
 		//L1
 		input L1_write, L1_read,
@@ -233,6 +234,7 @@ assign INT_write_data= 'h0;
 //STORE
 assign store_write = (`COMMIMP == `COM_SAVE)?1'b1:1'b0; 
 assign store_read = (`COMMIMP == `COM_LOAD)?1'b1:1'b0;
+assign store_call = (`COMMIMP == `COM_CALL)?1'b1:1'b0;
 
 //L1
 

@@ -71,7 +71,7 @@ refer to the applicable agreement for further details.
 	(input)
 	(rect -304 752 -136 768)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "store_busy" (rect 5 0 57 17)(font "Intel Clear" ))
+	(text "store_busy" (rect 5 0 56 17)(font "Intel Clear" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -87,7 +87,7 @@ refer to the applicable agreement for further details.
 	(input)
 	(rect -304 768 -136 784)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "L1WR" (rect 5 0 35 17)(font "Intel Clear" ))
+	(text "L1WR" (rect 5 0 34 17)(font "Intel Clear" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -103,7 +103,7 @@ refer to the applicable agreement for further details.
 	(input)
 	(rect -304 784 -136 800)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "L1RD" (rect 5 0 31 17)(font "Intel Clear" ))
+	(text "L1RD" (rect 5 0 30 17)(font "Intel Clear" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -119,7 +119,7 @@ refer to the applicable agreement for further details.
 	(input)
 	(rect -304 800 -136 816)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "L1ADDR[1..0]" (rect 5 0 69 17)(font "Intel Clear" ))
+	(text "L1ADDR[1..0]" (rect 5 0 68 17)(font "Intel Clear" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -276,6 +276,22 @@ refer to the applicable agreement for further details.
 	)
 )
 (pin
+	(output)
+	(rect 448 1624 624 1640)
+	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
+	(text "ST_CALL" (rect 90 0 133 17)(font "Intel Clear" ))
+	(pt 0 8)
+	(drawing
+		(line (pt 0 8)(pt 52 8))
+		(line (pt 52 4)(pt 78 4))
+		(line (pt 52 12)(pt 78 12))
+		(line (pt 52 12)(pt 52 4))
+		(line (pt 78 4)(pt 82 8))
+		(line (pt 82 8)(pt 78 12))
+		(line (pt 78 12)(pt 82 8))
+	)
+)
+(pin
 	(bidir)
 	(rect 448 1576 624 1592)
 	(text "BIDIR" (rect 1 0 25 10)(font "Arial" (font_size 6)))
@@ -311,7 +327,7 @@ refer to the applicable agreement for further details.
 )
 (pin
 	(bidir)
-	(rect 416 1184 592 1200)
+	(rect 416 1200 592 1216)
 	(text "BIDIR" (rect 1 0 25 10)(font "Arial" (font_size 6)))
 	(text "L2DAT[7..0]" (rect 90 0 149 12)(font "Arial" ))
 	(pt 0 8)
@@ -1037,9 +1053,9 @@ refer to the applicable agreement for further details.
 	)
 )
 (symbol
-	(rect -16 616 272 1240)
+	(rect -16 616 272 1272)
 	(text "CORE" (rect 5 0 36 12)(font "Arial" ))
-	(text "ix_core" (rect 8 608 43 620)(font "Arial" ))
+	(text "ix_core" (rect 8 640 43 652)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -1337,9 +1353,16 @@ refer to the applicable agreement for further details.
 	(port
 		(pt 288 560)
 		(output)
+		(text "store_call" (rect 0 0 47 12)(font "Arial" ))
+		(text "store_call" (rect 228 555 267 567)(font "Arial" ))
+		(line (pt 288 560)(pt 272 560))
+	)
+	(port
+		(pt 288 576)
+		(output)
 		(text "SEGMENT[7..0]" (rect 0 0 77 12)(font "Arial" ))
-		(text "SEGMENT[7..0]" (rect 202 555 267 567)(font "Arial" ))
-		(line (pt 288 560)(pt 272 560)(line_width 3))
+		(text "SEGMENT[7..0]" (rect 202 571 267 583)(font "Arial" ))
+		(line (pt 288 576)(pt 272 576)(line_width 3))
 	)
 	(port
 		(pt 288 48)
@@ -1356,21 +1379,21 @@ refer to the applicable agreement for further details.
 		(line (pt 288 320)(pt 272 320)(line_width 3))
 	)
 	(port
-		(pt 288 576)
-		(bidir)
-		(text "L12loader[7..0]" (rect 0 0 73 12)(font "Arial" ))
-		(text "L12loader[7..0]" (rect 210 571 283 583)(font "Arial" ))
-		(line (pt 288 576)(pt 272 576)(line_width 3))
-	)
-	(port
 		(pt 288 592)
 		(bidir)
-		(text "L1_wire[7..0]" (rect 0 0 62 12)(font "Arial" ))
-		(text "L1_wire[7..0]" (rect 217 587 279 599)(font "Arial" ))
+		(text "L12loader[7..0]" (rect 0 0 73 12)(font "Arial" ))
+		(text "L12loader[7..0]" (rect 210 587 283 599)(font "Arial" ))
 		(line (pt 288 592)(pt 272 592)(line_width 3))
 	)
+	(port
+		(pt 288 608)
+		(bidir)
+		(text "L1_wire[7..0]" (rect 0 0 62 12)(font "Arial" ))
+		(text "L1_wire[7..0]" (rect 217 603 279 615)(font "Arial" ))
+		(line (pt 288 608)(pt 272 608)(line_width 3))
+	)
 	(drawing
-		(rectangle (rect 16 16 272 608))
+		(rectangle (rect 16 16 272 640))
 	)
 )
 (connector
@@ -1899,11 +1922,6 @@ refer to the applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 272 1176)
-	(pt 328 1176)
-	(bus)
-)
-(connector
 	(pt 416 1144)
 	(pt 272 1144)
 )
@@ -2055,11 +2073,6 @@ refer to the applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 328 936)
-	(pt 328 1176)
-	(bus)
-)
-(connector
 	(pt 328 1520)
 	(pt 328 1696)
 	(bus)
@@ -2067,26 +2080,6 @@ refer to the applicable agreement for further details.
 (connector
 	(pt -120 1656)
 	(pt 360 1656)
-	(bus)
-)
-(connector
-	(pt 272 1208)
-	(pt 328 1208)
-	(bus)
-)
-(connector
-	(pt 328 1176)
-	(pt 328 1208)
-	(bus)
-)
-(connector
-	(pt 328 1208)
-	(pt 328 1520)
-	(bus)
-)
-(connector
-	(pt 272 1192)
-	(pt 416 1192)
 	(bus)
 )
 (connector
@@ -2102,6 +2095,48 @@ refer to the applicable agreement for further details.
 	(pt -16 776)
 	(pt -136 776)
 )
+(connector
+	(pt 272 1224)
+	(pt 328 1224)
+	(bus)
+)
+(connector
+	(pt 328 1224)
+	(pt 328 1520)
+	(bus)
+)
+(connector
+	(pt 272 1208)
+	(pt 416 1208)
+	(bus)
+)
+(connector
+	(pt 328 1192)
+	(pt 272 1192)
+	(bus)
+)
+(connector
+	(pt 328 936)
+	(pt 328 1192)
+	(bus)
+)
+(connector
+	(pt 328 1192)
+	(pt 328 1224)
+	(bus)
+)
+(connector
+	(pt 272 1176)
+	(pt 392 1176)
+)
+(connector
+	(pt 392 1176)
+	(pt 392 1632)
+)
+(connector
+	(pt 392 1632)
+	(pt 448 1632)
+)
 (junction (pt 304 224))
 (junction (pt 304 552))
 (junction (pt 304 344))
@@ -2109,8 +2144,8 @@ refer to the applicable agreement for further details.
 (junction (pt 304 104))
 (junction (pt 968 288))
 (junction (pt 968 472))
-(junction (pt 328 1176))
 (junction (pt 328 936))
 (junction (pt 968 632))
 (junction (pt 328 1520))
-(junction (pt 328 1208))
+(junction (pt 328 1224))
+(junction (pt 328 1192))
