@@ -4,25 +4,50 @@ module test
 	();
 	
 reg CLK;
-reg RES;
-wire [15:0] BUF2CPU;
-wire [7:0] IP;
-wire [7:0] PORTA;
+reg	RES;
+reg	store_busy;
+reg	L1WR;
+reg	L1RD;
+reg	[15:0] BUF2CPU;
+reg	[1:0] L1ADDR;
+wire ST_WR;
+wire	ST_RD;
+wire	READ;
+wire	WRITE;
+wire	ST_CALL;
+wire	[7:0] ADDR;
+wire	[7:0] IP;
+wire	[7:0] L2DAT;
+wire	[7:0] LD0;
+wire	[7:0] LD1;
+wire	[7:0] SA;
+wire	[7:0] SB;
+wire	[7:0] SC;
 	
 MicroCPU ix_CP(
 .CLK(CLK),
 .RES(RES),
+.store_busy(store_busy),
+.L1WR(L1WR),
+.L1RD(L1RD),
 .BUF2CPU(BUF2CPU),
+.L1ADDR(L1ADDR),
+.ST_WR(ST_WR),
+.ST_RD(ST_RD),
+.READ(READ),
+.WRITE(WRITE),
+.ST_CALL(ST_CALL),
+.ADDR(ADDR),
 .IP(IP),
-.PORTA(PORTA)
+.L2DAT(L2DAT),
+.LD0(LD0),
+.LD1(LD1),
+.SA(SA),
+.SB(SB),
+.SC(SC)
 );	
 
-programmmem ix_MM(
-.CLK(CLK),
-.RESET(RES),
-.DATA(BUF2CPU),
-.IP(IP)
-);
+
 
 initial
 	begin
@@ -36,45 +61,29 @@ initial
 		#100 RES = 1'b1;
 		
 		#1000;
-		$stop;
+
 	end
-	
-endmodule
 
-
-module programmmem
-(
-	input CLK, RESET,
-	input [7:0] IP,
-	output [15:0] DATA
-);
-
-reg [15:0] buff;
-
-always@(posedge CLK or negedge RESET)
+initial
 	begin
-		if(!RESET)
-			buff <= 'h0;
-		else
-			begin
-				case(IP)
-				1:buff <= 16'd0;
-				2:buff <= {8'd13,8'd100};
-				3:buff <= {8'd12,4'd0,4'd3};
-				4:buff <= {8'd13,8'd25};
-				5:buff <= {8'd12,4'd1,4'd3};
-				6:buff <= {8'd02,4'd0,4'd0};
-				7:buff <= {8'd12,4'd5,4'd4};
-				8:buff <= {8'd13,8'd21};
-				9:buff <= {8'd12,4'd1,4'd3};
-				10:buff <= {8'd12,4'd0,4'd5};
-				11:buff <= {8'd02,4'd0,4'd0};
-				12:buff <= {8'd12,4'd6,4'd4};
-				default:buff <= 'h0;
-				endcase
-			end
+		#0;
+		store_busy = 'h0;
+		L1WR = 'h0;
+		L1RD = 'h0;
+		BUF2CPU = 'h0;
+		L1ADDR = 'h0;
+		wait (IP ==8'hFF);
+		@(posedge CLK);
+		@(posedge CLK);
+		wait (IP ==8'hFF);
+		@(posedge CLK) store_busy = 1;
+		#1000;
+		$stop;
+		
+		
 	end
-	
-assign DATA = buff;
-
 endmodule
+
+
+
+

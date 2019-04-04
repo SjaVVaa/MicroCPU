@@ -2,8 +2,8 @@
 
 module SDRAM_CTRL
 	(
-		input CLK, RESET, read_data, write_data, set_adr, CLK_SDRAM,
-		inout [`NUMBER_WIDTH_DATA_WIRE - 1 : 0] DATA,
+		input CLK, RESET, read_data, write_data, set_adr,
+		inout [`NUMBER_WIDTH_DATA_WIRE - 1 : 0] DATA3, DATA2, DATA1, DATA0,
 		
 		output reg  SDCKE,  SDRAS, SDCAS, SDWE, BUSY, 
 		output SDCLK,
@@ -49,7 +49,7 @@ wire set_param = (adr==5'd11 && (write_data&&read_data))? 1'b1:1'b0;
 wire start_dly = ({front_start,start_pl} == 2'b01)?1'b1:1'b0;
 wire read_dly = ({front_read,read_data} == 2'b01)?1'b1:1'b0;
 assign SDDQ = 	(en_wr)?IO_BUFFER[COUNT]:'hZ;
-assign SDCLK = CLK_SDRAM;
+assign SDCLK = CLK;
 
 assign DATA = (write_data)?dataout:'hz;
 

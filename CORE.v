@@ -126,6 +126,8 @@ always@(posedge CLK or negedge RESET)
 					SA <= `COMMDAT;
 				else if(`COMMIMP == `COM_SET_SA)
 					SA <= CONST_out;
+				else if(&SB)
+					SA <= SA + 1'd1;
 				else
 					SA <= SA;
 			end
@@ -142,6 +144,8 @@ always@(posedge CLK or negedge RESET)
 					SB <= `COMMDAT;
 				else if(`COMMIMP == `COM_SET_SB)
 					SB <= CONST_out;
+				else if(&SC)
+					SB <= SB + 1'd1;
 				else
 					SB <= SB;
 			end
@@ -158,6 +162,8 @@ always@(posedge CLK or negedge RESET)
 					SC <= `COMMDAT;
 				else if(`COMMIMP == `COM_SET_SC)
 					SC <= CONST_out;
+				else if(&IP)
+					SC <= SC + 1'd1;
 				else
 					SC <= SC;
 			end
