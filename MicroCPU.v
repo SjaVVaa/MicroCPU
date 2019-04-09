@@ -14,7 +14,7 @@
 
 // PROGRAM		"Quartus Prime"
 // VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
-// CREATED		"Tue Apr 09 15:17:47 2019"
+// CREATED		"Tue Apr 09 16:51:17 2019"
 
 module MicroCPU(
 	CLK,
@@ -52,10 +52,6 @@ module MicroCPU(
 	READ,
 	WRITE,
 	ST_CALL,
-	PU_SA,
-	PU_SB,
-	PU_SC,
-	PU_IP,
 	START_PU1,
 	START_PU2,
 	START_PU3,
@@ -75,6 +71,10 @@ module MicroCPU(
 	L2DAT,
 	LD0,
 	LD1,
+	PU_IP,
+	PU_SA,
+	PU_SB,
+	PU_SC,
 	SA,
 	SB,
 	SC
@@ -116,10 +116,6 @@ output wire	ST_RD;
 output wire	READ;
 output wire	WRITE;
 output wire	ST_CALL;
-output wire	PU_SA;
-output wire	PU_SB;
-output wire	PU_SC;
-output wire	PU_IP;
 output wire	START_PU1;
 output wire	START_PU2;
 output wire	START_PU3;
@@ -139,6 +135,10 @@ output wire	[7:0] IP;
 inout wire	[7:0] L2DAT;
 inout wire	[7:0] LD0;
 inout wire	[7:0] LD1;
+output wire	[7:0] PU_IP;
+output wire	[7:0] PU_SA;
+output wire	[7:0] PU_SB;
+output wire	[7:0] PU_SC;
 output wire	[7:0] SA;
 output wire	[7:0] SB;
 output wire	[7:0] SC;
@@ -246,10 +246,6 @@ CORE	b2v_ix_core(
 	.store_write(ST_WR),
 	.store_read(ST_RD),
 	.store_call(ST_CALL),
-	.PU_SA(PU_SA),
-	.PU_SB(PU_SB),
-	.PU_SC(PU_SC),
-	.PU_IP(PU_IP),
 	.START_PU1(START_PU1),
 	.START_PU2(START_PU2),
 	.START_PU3(START_PU3),
@@ -269,6 +265,10 @@ CORE	b2v_ix_core(
 	.IP(IP),
 	
 	
+	.PU_IP(PU_IP),
+	.PU_SA(PU_SA),
+	.PU_SB(PU_SB),
+	.PU_SC(PU_SC),
 	.SA(SA),
 	.SB(SB),
 	.SC(SC),

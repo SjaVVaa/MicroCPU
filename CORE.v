@@ -56,10 +56,10 @@ module CORE
 		inout [`NUMBER_WIDTH_DATA_WIRE - 1: 0] L12loader, L1_wire,
 		
 		//IP to slave PU
-		output PU_SA = L1_MEM[0],
-		output PU_SB = L1_MEM[1],
-		output PU_SC = L1_MEM[2],
-		output PU_IP = L1_MEM[3],
+		output [`LEN_SEGMENT-1:0] PU_SA = L1_MEM[0],
+		output [`LEN_SEGMENT-1:0] PU_SB = L1_MEM[1],
+		output [`LEN_SEGMENT-1:0] PU_SC = L1_MEM[2],
+		output [`LEN_SEGMENT-1:0] PU_IP = L1_MEM[3],
 		output START_PU1, START_PU2, START_PU3, START_PU4, START_PU5, START_PU6, START_PU7,
 		output reg EN_PU1, EN_PU2, EN_PU3, EN_PU4, EN_PU5, EN_PU6, EN_PU7,
 		input 	INT_PU1,INT_PU2,INT_PU3,INT_PU4,INT_PU5,INT_PU6,INT_PU7
