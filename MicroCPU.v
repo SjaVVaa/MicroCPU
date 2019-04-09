@@ -14,7 +14,7 @@
 
 // PROGRAM		"Quartus Prime"
 // VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
-// CREATED		"Thu Apr 04 13:46:11 2019"
+// CREATED		"Tue Apr 09 15:17:47 2019"
 
 module MicroCPU(
 	CLK,
@@ -22,6 +22,29 @@ module MicroCPU(
 	store_busy,
 	L1WR,
 	L1RD,
+	INT0,
+	INT1,
+	INT2,
+	INT3,
+	INT4,
+	INT5,
+	INT6,
+	INT7,
+	INT8,
+	INT9,
+	INT10,
+	INT11,
+	INT12,
+	INT13,
+	INT14,
+	INT15,
+	INT_PU1,
+	INT_PU2,
+	INT_PU3,
+	INT_PU4,
+	INT_PU5,
+	INT_PU6,
+	INT_PU7,
 	BUF2CPU,
 	L1ADDR,
 	ST_WR,
@@ -29,6 +52,24 @@ module MicroCPU(
 	READ,
 	WRITE,
 	ST_CALL,
+	PU_SA,
+	PU_SB,
+	PU_SC,
+	PU_IP,
+	START_PU1,
+	START_PU2,
+	START_PU3,
+	START_PU4,
+	START_PU5,
+	START_PU6,
+	START_PU7,
+	EN_PU1,
+	EN_PU2,
+	EN_PU3,
+	EN_PU4,
+	EN_PU5,
+	EN_PU6,
+	EN_PU7,
 	ADDR,
 	IP,
 	L2DAT,
@@ -45,6 +86,29 @@ input wire	RES;
 input wire	store_busy;
 input wire	L1WR;
 input wire	L1RD;
+input wire	INT0;
+input wire	INT1;
+input wire	INT2;
+input wire	INT3;
+input wire	INT4;
+input wire	INT5;
+input wire	INT6;
+input wire	INT7;
+input wire	INT8;
+input wire	INT9;
+input wire	INT10;
+input wire	INT11;
+input wire	INT12;
+input wire	INT13;
+input wire	INT14;
+input wire	INT15;
+input wire	INT_PU1;
+input wire	INT_PU2;
+input wire	INT_PU3;
+input wire	INT_PU4;
+input wire	INT_PU5;
+input wire	INT_PU6;
+input wire	INT_PU7;
 input wire	[15:0] BUF2CPU;
 input wire	[1:0] L1ADDR;
 output wire	ST_WR;
@@ -52,6 +116,24 @@ output wire	ST_RD;
 output wire	READ;
 output wire	WRITE;
 output wire	ST_CALL;
+output wire	PU_SA;
+output wire	PU_SB;
+output wire	PU_SC;
+output wire	PU_IP;
+output wire	START_PU1;
+output wire	START_PU2;
+output wire	START_PU3;
+output wire	START_PU4;
+output wire	START_PU5;
+output wire	START_PU6;
+output wire	START_PU7;
+output wire	EN_PU1;
+output wire	EN_PU2;
+output wire	EN_PU3;
+output wire	EN_PU4;
+output wire	EN_PU5;
+output wire	EN_PU6;
+output wire	EN_PU7;
 output wire	[7:0] ADDR;
 output wire	[7:0] IP;
 inout wire	[7:0] L2DAT;
@@ -123,6 +205,13 @@ CORE	b2v_ix_core(
 	.store_busy(store_busy),
 	.L1_write(L1WR),
 	.L1_read(L1RD),
+	.INT_PU1(INT_PU1),
+	.INT_PU2(INT_PU2),
+	.INT_PU3(INT_PU3),
+	.INT_PU4(INT_PU4),
+	.INT_PU5(INT_PU5),
+	.INT_PU6(INT_PU6),
+	.INT_PU7(INT_PU7),
 	.COMMAND_INPUT(BUF2CPU),
 	.CONST_out(DATA_WIRE),
 	.L12loader(L2DAT),
@@ -157,6 +246,24 @@ CORE	b2v_ix_core(
 	.store_write(ST_WR),
 	.store_read(ST_RD),
 	.store_call(ST_CALL),
+	.PU_SA(PU_SA),
+	.PU_SB(PU_SB),
+	.PU_SC(PU_SC),
+	.PU_IP(PU_IP),
+	.START_PU1(START_PU1),
+	.START_PU2(START_PU2),
+	.START_PU3(START_PU3),
+	.START_PU4(START_PU4),
+	.START_PU5(START_PU5),
+	.START_PU6(START_PU6),
+	.START_PU7(START_PU7),
+	.EN_PU1(EN_PU1),
+	.EN_PU2(EN_PU2),
+	.EN_PU3(EN_PU3),
+	.EN_PU4(EN_PU4),
+	.EN_PU5(EN_PU5),
+	.EN_PU6(EN_PU6),
+	.EN_PU7(EN_PU7),
 	.ALU_COMM(ALU_COM),
 	
 	.IP(IP),
@@ -188,22 +295,22 @@ INTERRUPT	b2v_ix_int(
 	.RESET(RES),
 	.read_data(inted),
 	.write_data(intwd),
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	.INT0(INT0),
+	.INT1(INT1),
+	.INT2(INT2),
+	.INT3(INT3),
+	.INT4(INT4),
+	.INT5(INT5),
+	.INT6(INT6),
+	.INT7(INT7),
+	.INT8(INT8),
+	.INT9(INT9),
+	.INT10(INT10),
+	.INT11(INT11),
+	.INT12(INT12),
+	.INT13(INT13),
+	.INT14(INT14),
+	.INT15(INT15),
 	.DATA(DATA_WIRE),
 	.INT2COR(int2cor),
 	

@@ -95,7 +95,8 @@ always@(posedge CLK or negedge RESET)
 						6:REQUEST_OK_6	<= 1'b0;
 						7:REQUEST_OK_7	<= 1'b0;
 						8:REQUEST_OK_8	<= 1'b0;
-						default:						
+						default:REQUEST_OK_1 <= REQUEST_OK_1;
+						endcase
 					end
 				
 					
@@ -118,6 +119,7 @@ always@(posedge CLK or negedge RESET)
 				7:MUX_BUSY = BUSY_7;
 				8:MUX_BUSY = BUSY_8;
 				default:MUX_BUSY = 'h0;
+				endcase
 			end
 	end
 

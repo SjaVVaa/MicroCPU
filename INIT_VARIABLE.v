@@ -51,22 +51,28 @@
 `define	COM_RET		8'd26		//	{fl,ip}<stk	x		+			x		-	
 //------------------------------------------------------------------- INT <<==================not working now
 `define	COM_INT		8'd27		//	{const}		x		+			x		x		init programm int	
-`define	COM_INTON	8'd28		//	{const}		x		+			x		x		int
-`define	COM_INTOFF	8'd29		//	{const}		x		+			x		x		int
+`define	COM_INTA		8'd28		//
+`define	COM_INTON	8'd29		//	{const}		x		+			x		x		int
+`define	COM_INTOFF	8'd30		//	{const}		x		+			x		x		int
 //------------------------------------------------------------------- STORE 
-`define	COM_SET_SA	8'd30		//	SA<---B		x		+			x		x		set segment [A,
-`define	COM_SET_SB	8'd31		//	SB<---B		x		+			x		x		set segment ,B,
-`define	COM_SET_SC	8'd32		//	SC<---B		x		+			x		x		set segment ,C,IP]
-`define	COM_GET_SA	8'd33		//	B<---SA		x		+			x		x		get segment [A,
-`define	COM_GET_SB	8'd34		//	B<---SB		x		+			x		x		get segment ,B,
-`define	COM_GET_SC	8'd35		//	B<---SC		x		+			x		x		get segment ,C,IP]
-`define	COM_SA		8'd36		//	{const}		x		+			x		x		set segment [A,
-`define	COM_SB		8'd37		//	{const}		x		+			x		x		set segment ,B,
-`define	COM_SC		8'd38		//	{const}		x		+			x		x		set segment ,C,IP]
-`define	COM_SAVE	8'd39		//	x			x		+			x		x		save data from L4 to MEM
-`define	COM_LOAD	8'd40		//	x			x		+			x		x		load data from MEM to L4
+`define	COM_SET_SA	8'd31		//	SA<---B		x		+			x		x		set segment [A,
+`define	COM_SET_SB	8'd32		//	SB<---B		x		+			x		x		set segment ,B,
+`define	COM_SET_SC	8'd33		//	SC<---B		x		+			x		x		set segment ,C,IP]
+`define	COM_GET_SA	8'd34		//	B<---SA		x		+			x		x		get segment [A,
+`define	COM_GET_SB	8'd35		//	B<---SB		x		+			x		x		get segment ,B,
+`define	COM_GET_SC	8'd36		//	B<---SC		x		+			x		x		get segment ,C,IP]
+`define	COM_SA		8'd37		//	{const}		x		+			x		x		set segment [A,
+`define	COM_SB		8'd38		//	{const}		x		+			x		x		set segment ,B,
+`define	COM_SC		8'd39		//	{const}		x		+			x		x		set segment ,C,IP]
+`define	COM_SAVE	8'd40		//	x			x		+			x		x		save data from L4 to MEM
+`define	COM_LOAD	8'd41		//	x			x		+			x		x		load data from MEM to L4
 //------------------------------------------------------------------- L1
-`define	COM_L1MEM	8'd41		//	{const}		x		+			x		x
+`define	COM_L1MEM	8'd42		//	{const}		x		+			x		x
+//------------------------------------------------------------------- END FLOW
+`define	COM_INTFLOW	8'd43	//	x			x		x		+			x		x
+`define	COM_ENCORE	8'd44 //	{const}
+`define	COM_START	8'd45	//	{const}
+`define	COM_OFFCORE	8'd46	//	{const}
 //------------------------------------------------------------------- MEMORY STRUCT
 //0x00_00_00_00	0x0F_FF_FF_FF	BUTLOADER
 //0x10_00_00_00	0x1F_FF_FF_FF	SDRAM 32MB
@@ -84,6 +90,8 @@
 `define	ADR_L3MEM	4'd8
 `define	ADR_INT		4'd9
 `define	ADR_L1MEM	4'd10
+`define	ADR_CPUSTaT	4'd11
+
 
 
 //			--- ALU ---
