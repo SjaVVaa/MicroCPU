@@ -14,7 +14,7 @@
 
 // PROGRAM		"Quartus Prime"
 // VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
-// CREATED		"Tue Apr 09 16:51:17 2019"
+// CREATED		"Wed Apr 10 13:52:34 2019"
 
 module MicroCPU(
 	CLK,
@@ -183,7 +183,7 @@ wire	zf_out;
 
 
 
-ALU	b2v_ix_alu(
+ALU	ix_alu(
 	.CLK(CLK),
 	.RESET(RES),
 	.read_data(aludr),
@@ -196,7 +196,7 @@ ALU	b2v_ix_alu(
 	.RESULT(DATA_WIRE));
 
 
-CORE	b2v_ix_core(
+CORE	ix_core(
 	.CLK(CLK),
 	.RESET(RES),
 	.fl_zf(zf_out),
@@ -276,7 +276,7 @@ CORE	b2v_ix_core(
 	);
 
 
-FLAG	b2v_ix_flag(
+FLAG	ix_flag(
 	.CLK(CLK),
 	.RESET(RES),
 	.read_data(flagdr),
@@ -290,7 +290,7 @@ FLAG	b2v_ix_flag(
 	);
 
 
-INTERRUPT	b2v_ix_int(
+INTERRUPT	ix_int(
 	.CLK(CLK),
 	.RESET(RES),
 	.read_data(inted),
@@ -317,7 +317,7 @@ INTERRUPT	b2v_ix_int(
 	.NUM_INT(num));
 
 
-L2_MEMORY	b2v_ix_l2(
+L2_MEMORY	ix_l2(
 	.CLK(CLK),
 	.RESET(RES),
 	.data_read(l2dr),
@@ -327,7 +327,7 @@ L2_MEMORY	b2v_ix_l2(
 	.DATA_out(DATA_WIRE));
 
 
-L3_CTRL_DUO	b2v_ix_l3(
+L3_CTRL_DUO	ix_l3(
 	.CLK(CLK),
 	.RESET(RES),
 	.read_data(l3rd),
@@ -345,7 +345,7 @@ L3_CTRL_DUO	b2v_ix_l3(
 	);
 
 
-SPECIAL_REG	b2v_ix_reg_A(
+SPECIAL_REG	ix_reg_A(
 	.CLK(CLK),
 	.RESET(RES),
 	.data_read(adr),
@@ -355,7 +355,7 @@ SPECIAL_REG	b2v_ix_reg_A(
 	.DATA_ALU(A2ALU));
 
 
-SPECIAL_REG	b2v_ix_reg_B(
+SPECIAL_REG	ix_reg_B(
 	.CLK(CLK),
 	.RESET(RES),
 	.data_read(bdr),
@@ -365,7 +365,7 @@ SPECIAL_REG	b2v_ix_reg_B(
 	.DATA_ALU(B2ALU));
 
 
-OPERATION_REG	b2v_ix_reg_C(
+OPERATION_REG	ix_reg_C(
 	.CLK(CLK),
 	.RESET(RES),
 	.data_read(cdr),
@@ -374,7 +374,7 @@ OPERATION_REG	b2v_ix_reg_C(
 	);
 
 
-OPERATION_REG	b2v_ix_reg_D(
+OPERATION_REG	ix_reg_D(
 	.CLK(CLK),
 	.RESET(RES),
 	.data_read(ddr),
@@ -383,7 +383,7 @@ OPERATION_REG	b2v_ix_reg_D(
 	);
 
 
-STACK	b2v_ix_stack(
+STACK	ix_stack(
 	.CLK(CLK),
 	.RESET(RES),
 	.read_data(stackdr),

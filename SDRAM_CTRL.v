@@ -60,13 +60,13 @@ assign DATA = (write_data)?dataout:'hz;
 `define	SDRAM_WRITE	4'd4
 `define 	SDRAM_ACTIVE 4'd5
 
-always@(negedge CLK_SDRAM or negedge RESET)
+always@(negedge CLK or negedge RESET)
 	if(!RESET)
 		front_start <= 'h0;
 	else
 		front_start <= {front_start,start_pl};
 		
-always@(negedge CLK_SDRAM or negedge RESET)
+always@(negedge CLK or negedge RESET)
 	if(!RESET)
 		front_read <= 'h0;
 	else
@@ -181,7 +181,7 @@ always@(posedge CLK)
 	
 
 
-always@(negedge CLK_SDRAM or negedge RESET)
+always@(negedge CLK or negedge RESET)
 	begin
 		if(!RESET)
 			begin
@@ -244,7 +244,7 @@ always@(negedge CLK_SDRAM or negedge RESET)
 	
 
 
-always@(negedge CLK_SDRAM)
+always@(negedge CLK)
 	begin
 		case(BURST)
 		0:len_wort <= 'd1;
@@ -255,7 +255,7 @@ always@(negedge CLK_SDRAM)
 	end
 	
 
-always@(negedge CLK_SDRAM or negedge RESET)
+always@(negedge CLK or negedge RESET)
 	begin
 		if(!RESET)
 			begin
@@ -321,7 +321,7 @@ always@(negedge CLK_SDRAM or negedge RESET)
 			end
 	end
 
-always@(posedge CLK_SDRAM or negedge RESET)
+always@(posedge CLK or negedge RESET)
 	begin
 		if(!RESET)
 			begin

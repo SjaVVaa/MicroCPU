@@ -14,13 +14,12 @@
 
 // PROGRAM		"Quartus Prime"
 // VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
-// CREATED		"Tue Apr 09 17:01:45 2019"
+// CREATED		"Wed Apr 10 14:05:31 2019"
 
 module CPU(
 	RES,
 	CLK_C,
 	CLK_B,
-	write_data1,
 	BUSY_line_SLAVE,
 	EN,
 	REQUEST_OK,
@@ -49,7 +48,6 @@ module CPU(
 	INT_PU7,
 	EN4,
 	START_NEW_FLOW,
-	ADDR1,
 	IP_M,
 	SA_M,
 	SB_M,
@@ -73,9 +71,12 @@ module CPU(
 	EN_PU5,
 	EN_PU6,
 	EN_PU7,
+	READ,
+	WRITE,
 	BUSY_line_MASTER,
-	DATA1,
+	ADDR,
 	IP_D0,
+	LD0,
 	LD1,
 	NUMBER_UNIT,
 	PU_IP,
@@ -91,7 +92,6 @@ module CPU(
 input wire	RES;
 input wire	CLK_C;
 input wire	CLK_B;
-input wire	write_data1;
 input wire	BUSY_line_SLAVE;
 input wire	EN;
 input wire	REQUEST_OK;
@@ -120,7 +120,6 @@ input wire	INT_PU6;
 input wire	INT_PU7;
 input wire	EN4;
 input wire	START_NEW_FLOW;
-input wire	[7:0] ADDR1;
 input wire	[7:0] IP_M;
 input wire	[7:0] SA_M;
 input wire	[7:0] SB_M;
@@ -144,9 +143,12 @@ output wire	EN_PU4;
 output wire	EN_PU5;
 output wire	EN_PU6;
 output wire	EN_PU7;
+output wire	READ;
+output wire	WRITE;
 inout wire	BUSY_line_MASTER;
-inout wire	[7:0] DATA1;
+output wire	[7:0] ADDR;
 inout wire	[7:0] IP_D0;
+inout wire	[7:0] LD0;
 inout wire	[7:0] LD1;
 output wire	[3:0] NUMBER_UNIT;
 output wire	[7:0] PU_IP;
@@ -160,19 +162,16 @@ inout wire	[7:0] SC_D1;
 wire	callcore1;
 wire	CLK_C_g;
 wire	[15:0] COMWIRE;
-wire	[7:0] DATA2CORE1;
 wire	[1:0] l1adrwire;
 wire	l1rd;
 wire	l1wr;
 wire	[7:0] LDAT;
-wire	readcore1;
 wire	[7:0] SA;
 wire	[7:0] SB;
 wire	st2loadercore1dr;
 wire	st2loadercore1dw;
 wire	store_busy;
 wire	store_busy1;
-wire	writecore1;
 wire	SYNTHESIZED_WIRE_0;
 wire	[7:0] SYNTHESIZED_WIRE_1;
 wire	[7:0] SYNTHESIZED_WIRE_2;
@@ -180,7 +179,6 @@ wire	[7:0] SYNTHESIZED_WIRE_3;
 wire	[7:0] SYNTHESIZED_WIRE_4;
 wire	[7:0] SYNTHESIZED_WIRE_5;
 wire	[7:0] SYNTHESIZED_WIRE_6;
-wire	[7:0] SYNTHESIZED_WIRE_7;
 
 
 
@@ -257,12 +255,12 @@ MicroCPU	b2v_inst2(
 	.BUF2CPU(COMWIRE),
 	.L1ADDR(l1adrwire),
 	.L2DAT(LDAT),
-	.LD0(DATA2CORE1),
+	.LD0(LD0),
 	.LD1(LD1),
 	.ST_WR(st2loadercore1dw),
 	.ST_RD(st2loadercore1dr),
-	.READ(readcore1),
-	.WRITE(writecore1),
+	.READ(READ),
+	.WRITE(WRITE),
 	.ST_CALL(callcore1),
 	.START_PU1(START_PU1),
 	.START_PU2(START_PU2),
@@ -278,7 +276,7 @@ MicroCPU	b2v_inst2(
 	.EN_PU5(EN_PU5),
 	.EN_PU6(EN_PU6),
 	.EN_PU7(EN_PU7),
-	.ADDR(SYNTHESIZED_WIRE_7),
+	.ADDR(ADDR),
 	.IP(SYNTHESIZED_WIRE_5),
 	
 	
@@ -316,20 +314,6 @@ SLAVE_CTRL	b2v_inst3(
 	.SA_L(SYNTHESIZED_WIRE_2),
 	.SB_L(SYNTHESIZED_WIRE_3),
 	.SC_L(SYNTHESIZED_WIRE_4));
-
-
-L3_MEM_DUO	b2v_ix_l3_DUO(
-	.CLK(CLK_C),
-	.RES(RES),
-	.read_data(readcore1),
-	.write_data0(writecore1),
-	.write_data1(write_data1),
-	.ADDR0(SYNTHESIZED_WIRE_7),
-	.ADDR1(ADDR1),
-	.DATA0(DATA2CORE1),
-	.DATA1(DATA1)
-	
-	);
 
 
 endmodule
